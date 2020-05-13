@@ -1,0 +1,188 @@
+﻿
+@functions
+{
+    public string NextMonth()
+    {
+        int year = (int)ViewData["Year"];
+        int month = (int)ViewData["Month"];
+
+        month++;
+
+        if(month >= 12)
+        {
+            year++;
+            month = 1;
+        }
+
+        var link = "Home?year=" + year + "&month=" + month;
+        return link;
+    }
+
+    public string PrevMonth()
+    {
+        int year = (int)ViewData["Year"];
+        int month = (int)ViewData["Month"];
+
+        month--;
+
+        if (month <= 0)
+        {
+            year--;
+            month = 12;
+        }
+
+        var link = "Home?year=" + year + "&month=" + month;
+        return link;
+    }
+
+    public string MonthAndYear()
+    {
+        string[] names = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        var m = names[(int)ViewData["Month"] - 1];
+        var y = ViewData["Year"];
+        var t = m + " - " + y;
+
+        return t;
+    }
+
+    public string GoToDay(int i)
+    {
+        var day = i;
+        var month = ViewData["Month"];
+        var year = ViewData["Year"];
+
+        var link = "events?date=" + day + "/" + month + "/" + year;
+        return link;
+    }
+
+}
+
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        body {
+            font-family: Verdana, sans-serif;
+        }
+
+        .month {
+            padding: 30px 10px;
+            width: 100%;
+            background: orange;
+            text-align: center;
+        }
+
+            .month ul {
+                margin: 0;
+                padding: 0;
+            }
+
+                .month ul li {
+                    color: white;
+                    font-size: 40px;
+                    text-transform: uppercase;
+                    letter-spacing: 3px;
+                }
+
+            .month .prev {
+                float: left;
+                padding-top: 10px;
+            }
+
+            .month .next {
+                float: right;
+                padding-top: 10px;
+            }
+
+        .weekdays {
+            margin: 0;
+            padding: 20px 0;
+            background-color: darkorange;
+        }
+
+            .weekdays li {
+                display: inline-block;
+                width: 13.6%;
+                color: white;
+                font-size: 30px;
+                text-align: center;
+            }
+
+        .days {
+            padding: 20px 0;
+            background: orange;
+            margin: 0;
+        }
+
+            .days li {
+                list-style-type: none;
+                display: inline-block;
+                width: 13.6%;
+                text-align: center;
+                margin-bottom: 5px;
+                font-size: 16px;
+                color: #777;
+            }
+
+                .days li .active {
+                    padding: 8px;
+                    background: darkorange;
+                    color: white !important
+                }
+    </style>
+</head>
+<body>
+
+    <div class="month">
+        <ul>
+            <li class="prev"><a href="@PrevMonth()">&#10094;</a></li>
+            <li class="next"><a href="@NextMonth()">&#10095;</a></li>
+            <li>
+                @MonthAndYear()
+            </li>
+        </ul>
+    </div>
+
+    <ul class="weekdays">
+        <li>Mo</li>
+        <li>Tu</li>
+        <li>We</li>
+        <li>Th</li>
+        <li>Fr</li>
+        <li>Sa</li>
+        <li>Su</li>
+    </ul>
+
+    <ul class="days">
+
+        @for (int j = 0; j < (int)ViewData["Shift"] - 1; j++)
+        {
+            <li></li>
+        }
+
+        @for (int i = 1; i < (int)ViewData["Days"] + 1; i++)
+        {
+
+            @if (i == (int)ViewData["CurrDay"] && DateTime.Now.Month == (int)ViewData["Month"] && DateTime.Now.Year == (int)ViewData["Year"])
+            {
+                <li><span class="active"><a href="@GoToDay(i)">@i</a></span></li>
+            }
+            else
+            {
+                <li><a href="@GoToDay(i)">@i</a></li>
+            }
+        }
+        @*<li><a href="events?date=12/5/2020">12</a></li>
+        <li><span class="active"><a href="events?date=13/5/2020">13</a></span></li>*@
+
+
+    </ul>
+
+</body>

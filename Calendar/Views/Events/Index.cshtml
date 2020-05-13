@@ -1,0 +1,93 @@
+﻿@model IEnumerable<CalendarEGUIc1.Models.Event>
+
+@functions{
+    public string BackToMonth()
+    {
+        var year = ViewData["Year"];
+
+        if ((int)year == 0)
+        {
+            var g = "";
+            return g;
+        }
+
+        var month = ViewData["Month"];
+        var link = "Home?year=" + year + "&month=" + month;
+        return link;
+    }
+
+    public string MonthAndYear()
+    {
+        if ((int)ViewData["Month"] == 0)
+        {
+            var g = "";
+            return g;
+        }
+
+        string[] names = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        var month = names[(int)ViewData["Month"] - 1];
+        var year = ViewData["Year"];
+        var t = "Go back to: " + month + "/" + year;
+        return t;
+    }
+
+    public string FullDate()
+    {
+
+        var year = ViewData["Year"];
+
+        if((int)year == 0)
+        {
+            var g = "";
+            return g;
+        }
+
+        var month = ViewData["Month"];
+        var day = ViewData["Day"];
+        var f = "at " + day + "/" + month + "/" + year;
+        return f;
+    }
+
+}
+
+<h4><a href="@BackToMonth()">@MonthAndYear()</a></h4>
+
+<p>
+    <a asp-action="Create">Create new event @FullDate()</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
